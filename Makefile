@@ -14,7 +14,7 @@ deps-init:
 	$(GOPATH)/bin/govendor init
 
 deps-get: deps-init
-	@$(GOPATH)/bin/govendor get github.com/lovoo/nsq_exporter
+	@$(GOPATH)/bin/govendor get github.com/gocloudio/nsq_exporter
 
 .PHONY: clean
 clean:
@@ -27,4 +27,14 @@ test:
 .PHONY: release-build
 release-build:
 	@go get -u github.com/mitchellh/gox
-	@$(GOX) $(GOX_ARGS) github.com/lovoo/nsq_exporter
+	@$(GOX) $(GOX_ARGS) github.com/gocloudio/nsq_exporter
+
+REPO := registry.ap-northeast-1.aliyuncs.com/gocloudio
+TAG ?= latest
+IMAGE_PREFIX := $(REPO)/
+.PHONY: build-image
+build-image: IMAGE = $(IMAGE_PREFIX)nsq_exporter:$(TAG)
+build-image:
+	echo $(IMAGE) > .image-label
+	DOCKER_BUILDKIT=1 docker buildx build --platform linux/arm64,linux/amd64 -t $(IMAGE) \
+		-f Dockerfile . --push
