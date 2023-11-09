@@ -29,7 +29,7 @@ release-build:
 	@go get -u github.com/mitchellh/gox
 	@$(GOX) $(GOX_ARGS) github.com/gocloudio/nsq_exporter
 
-REPO := registry.ap-northeast-1.aliyuncs.com/gocloudio
+REPO ?= registry.ap-northeast-1.aliyuncs.com/gocloudio
 TAG ?= latest
 IMAGE_PREFIX := $(REPO)/
 .PHONY: build-image
